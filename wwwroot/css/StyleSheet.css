@@ -20,8 +20,12 @@ h5 {
     color: #2d3745;
 }
 
-.yellow-font{
+.yellow-font, .navbar-inverse .navbar-brand {
     color: #fab515;
+}
+
+.middle {
+    display: inline-block;
 }
 
 
