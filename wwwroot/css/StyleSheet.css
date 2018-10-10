@@ -1,0 +1,44 @@
+﻿@import url('https://fonts.googleapis.com/css?family=Patua+One');
+
+.background-gradient {
+    background-color: white;
+}
+
+.control-label{
+    color: white;
+}
+
+h2 {
+    font-family: 'Patua One', cursive;
+}
+
+h5 {
+    font-family: 'Patua One', cursive;
+}
+
+.font-color {
+    color: #2d3745;
+}
+
+.yellow-font{
+    color: #fab515;
+}
+
+
+.navy{
+    background-color: #2d3745;
+    border-bottom: 2px solid #fab515;
+}
+
+.navy-yellow-button{
+    background-color: #2d3745;
+    border: 0.5px solid #fab515;
+    color: white;
+    transition-duration: 0.4s;
+}
+
+.navy-yellow-button:hover{
+    background-color: white;
+    color:#2d3745;
+    border: 0.5px solid #fab515;
+}

@@ -1,0 +1,100 @@
+﻿@model ClearSkyLogicTechnicalAssessment.Models.Subscriber
+
+@{
+    ViewData["Title"] = "Clear Sky Logic Assessment";
+}
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@functions{
+    public string GetAntiXsrfRequestToken()
+    {
+        return Xsrf.GetAndStoreTokens(Context).RequestToken;
+    }
+}
+
+<h2 class="font-color">Join the Club.</h2>
+
+<h5 class="font-color">Sign up to our Mailing List and you'll always be kept in the loop.</h5>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form class="form-horizontal" id="subscribe-form" name="subscribe-form">
+            <div class="form-group">
+                <label for="name" class="col-sm-2 control-label font-color">Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email" class="col-sm-2 control-label font-color">Email</label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                </div>
+            </div>
+            <input type="hidden" id="RequestVerificationToken"
+                   name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button id="subscribe" type="submit" class="btn btn-default navy-yellow-button">Register</button>
+                </div>
+            </div>
+        </form>
+        <div id="loading" class="hidden">
+            <i class="fa fa-spinner fa-spin" style="font-size:24px"></i>
+        </div>
+        <div id="success" class="alert alert-success hidden animated fadeInUp">
+        </div>
+        <div id="error" class="alert alert-warning hidden animated fadeInUp">
+        </div>
+
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $('#subscribe').click(function (event) {
+            event.preventDefault();
+            if ($('#subscribe-form').valid()) {
+                $('#subscribe').addClass("disabled");
+                $('#loading').removeClass("hidden");
+                var subscriber = new Object();
+                subscriber.Name = $("#name").val();
+                subscriber.Email = $("#email").val();
+                console.log(subscriber);
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/Create",
+                    data: JSON.stringify(subscriber),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    headers: {
+                        RequestVerificationToken:
+                            $('input:hidden[name="RequestVerificationToken"]').val()
+                    },
+                    success: function (response) {
+                        if (response.errorMessage) {
+                            $("#loading").addClass("hidden");
+                            $("#error").removeClass("hidden");
+                            $("#error").text(response.errorMessage);
+                            $('#subscribe').removeClass("disabled");
+                        } else {
+                            $("#loading").addClass("hidden");
+                            $("#error").addClass("hidden");
+                            $("#success").removeClass("hidden");
+                            $("#success").text("Welcome to the mailing list " + subscriber.Email);
+                            $('#subscribe-form').addClass("hidden");
+                        }
+
+                    },
+                    error: function (response) {
+                        $("#loading").removeClass("hidden");
+                        $('#subscribe').removeClass("disabled");
+                    }
+                })
+            }
+        });
+    </script>
+
+}
